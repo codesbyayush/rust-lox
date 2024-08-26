@@ -41,14 +41,15 @@ fn main() {
 fn tokenize(file_contents: &str) {
     let _ = file_contents.chars().for_each(|c| {
         match c {
-            '(' => {
-                println!("LEFT_PAREN ( null");
-            },
-            ')' => {
-                println!("RIGHT_PAREN ) null");
-            },
-            '{' => println!("LEFT_BRACE {{ null"),
-            '}' => println!("RIGHT_BRACE }} null"),
+
+            '(' =>     println!("LEFT_PAREN ( null"),        
+            '{' =>    println!("LEFT_BRACE {{ null"),
+            '*' =>    println!("STAR * null"),
+            '.' =>    println!("DOT . null"),
+            ',' =>    println!("COMMA , null"),
+            '+' =>    println!("PLUS + null"),
+            '}' =>    println!("RIGHT_BRACE }} null"),
+            ')' =>    println!("RIGHT_PAREN ) null"),
             _ => {
                 // println!("Something Unknown");
             }
