@@ -42,6 +42,24 @@ fn tokenize(file_contents: &str) {
     let mut ongoing_identifier = false;
     let mut literal_start = 0;
     for (i, c) in characters.enumerate() {
+
+        if is_comment {
+            if c == '\n' {
+                is_comment = false;
+                curr_line += 1;
+            }
+            continue;
+        }
+
+        if last_word == '/' {
+            last_word = ' ';
+            if c == '/' {
+                is_comment = true;
+                continue;
+            }
+            println!("SLASH / null");
+        }
+        
         if ongoing_string {
             if c == '\n' {
                 curr_line += 1;
@@ -96,22 +114,7 @@ fn tokenize(file_contents: &str) {
         }
 
 
-        if is_comment {
-            if c == '\n' {
-                is_comment = false;
-                curr_line += 1;
-            }
-            continue;
-        }
-
-        if last_word == '/' {
-            last_word = ' ';
-            if c == '/' {
-                is_comment = true;
-                continue;
-            }
-            println!("SLASH / null");
-        }
+        
         if c != '=' && last_word != ' ' {
             match last_word {
                 '=' => println!("EQUAL = null"),
