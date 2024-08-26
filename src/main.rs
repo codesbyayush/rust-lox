@@ -51,9 +51,9 @@ fn tokenize(file_contents: &str) {
             '-' =>    println!("MINUS - null"),
             '}' =>    println!("RIGHT_BRACE }} null"),
             ')' =>    println!("RIGHT_PAREN ) null"),
-            ';' =>    println!("SEMICOLON ; null"),
-            _ => {
-                // println!("Something Unknown");
+            ';' =>    println!("SEMICOLON ; null"), 
+            u => {
+                eprintln!("[line 1] Error: Unexpected character: {}", u);
             }
         };
     });
