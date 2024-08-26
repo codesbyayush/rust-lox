@@ -231,7 +231,8 @@ fn tokenize(file_contents: &str) {
     }
 
     if ongoing_identifier {
-        println!("IDENTIFIER {} null", &file_contents[literal_start..]);
+        let identifier_type = keywords.get(&file_contents[literal_start..]).unwrap_or(&"IDENTIFIER");
+        println!("{} {} null", identifier_type, &file_contents[literal_start..]);
     }
     
     println!("EOF  null");
