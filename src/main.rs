@@ -25,10 +25,11 @@ fn main() {
             if !file_contents.is_empty() {
                 panic!("Scanner not implemented");
             } else {
-                println!("EOF  null"); // Placeholder, remove this line when implementing the scanner
-            }
+            //     println!("EOF  null"); // Placeholder, remove this line when implementing the scanner
+            // }
 
             tokenize(&file_contents);
+            }
         }
         _ => {
             eprintln!( "Unknown command: {}", command);
@@ -38,18 +39,18 @@ fn main() {
 }
 
 fn tokenize(file_contents: &str) {
-    let _ = file_contents.chars().map(|c| {
+    let _ = file_contents.chars().for_each(|c| {
         match c {
             '(' => {
                 println!("LEFT_PAREN ( null");
-            }
+            },
             ')' => {
                 println!("RIGHT_PAREN ) null");
-            }
+            },
             _ => {
                 // println!("Something Unknown");
             }
         };
-    }).collect::<()>();
+    });
     println!("EOF null");
 }
