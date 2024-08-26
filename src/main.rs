@@ -56,6 +56,10 @@ fn tokenize(file_contents: &str) {
             }
             if !found { last = '=';}
             else { last = ' ';}
+        } else if last == '/' {
+            if c == '/' { last = ' '; break;}
+            else { println!("SLASH / null");}
+            last = ' ';
         }
         match c {
             '(' =>     println!("LEFT_PAREN ( null"),        
@@ -83,6 +87,7 @@ fn tokenize(file_contents: &str) {
             '!' =>    last = '!',
             '<' =>    last = '<',
             '>' =>    last = '>',
+            '/' =>    last = '/',
             u => {
                 eprintln!("[line 1] Error: Unexpected character: {}", u);
                 code = 65;
@@ -94,6 +99,7 @@ fn tokenize(file_contents: &str) {
         '!' => println!("BANG ! null"),
         '<' => println!("LESS < null"),
         '>' => println!("GREATER > null"),
+        '/' => println!("SLASH / null"),
         _ => {}
     }
     println!("EOF  null");
