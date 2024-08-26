@@ -45,12 +45,17 @@ fn tokenize(file_contents: &str) {
     let characters = file_contents.chars();
     let mut last = ' ';
     for (i, c) in characters.enumerate() {
-        if last == '=' && c != '=' {
-            println!("EQUAL = null");
-            last = ' ';
-        } else if last == '!' && c != '=' {
-            println!("BANG ! null");
-            last = ' ';
+        if c != '=' && last != ' ' {
+            let mut found = true;
+            match last {
+                '=' => println!("EQUAL = null"),
+                '!' => println!("BANG ! null"),
+                '<' => println!("LESS < null"),
+                '>' => println!("GREATER > null"),
+                _ => found = false
+            }
+            if !found { last = '=';}
+            else { last = ' ';}
         }
         match c {
             '(' =>     println!("LEFT_PAREN ( null"),        
@@ -64,19 +69,20 @@ fn tokenize(file_contents: &str) {
             ')' =>    println!("RIGHT_PAREN ) null"),
             ';' =>    println!("SEMICOLON ; null"), 
             '=' =>    {
+                let mut found = true;
                 match last {
-                    '=' => {
-                        println!("EQUAL_EQUAL == null");
-                        last = ' ';
-                    },
-                    '!' => {
-                        println!("BANG_EQUAL != null");
-                        last = ' ';
-                    },
-                    _ => last = '='
+                    '=' => println!("EQUAL_EQUAL == null"),
+                    '!' => println!("BANG_EQUAL != null"),
+                    '<' => println!("LESS_EQUAL <= null"),
+                    '>' => println!("GREATER_EQUAL >= null"),
+                    _ => found = false
                 }
+                if !found { last = '=';}
+                else { last = ' ';}
             },
             '!' =>    last = '!',
+            '<' =>    last = '<',
+            '>' =>    last = '>',
             u => {
                 eprintln!("[line 1] Error: Unexpected character: {}", u);
                 code = 65;
