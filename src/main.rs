@@ -87,11 +87,22 @@ fn tokenize(file_contents: &str) {
 
         if ongoing_number {
             let number_literal = &file_contents[literal_start..i];
-            let formatted_literal = if number_literal.contains('.') {
+            
+            let mut formatted_literal = if number_literal.contains('.') {
                 number_literal.to_string()
             } else {
                 format!("{}.0", number_literal)
             };
+            loop {
+                let last_char = formatted_literal.pop().unwrap();
+                if last_char != '0' {
+                    formatted_literal.push(last_char);
+                    if last_char == '.' {
+                        formatted_literal.push('0');
+                    }
+                    break;
+                }
+            }
             println!("NUMBER {} {}", number_literal, formatted_literal);
             ongoing_number = false;
         }
@@ -177,11 +188,21 @@ fn tokenize(file_contents: &str) {
 
     if ongoing_number {
         let number_literal = &file_contents[literal_start..];
-        let formatted_literal = if number_literal.contains('.') {
+        let mut formatted_literal = if number_literal.contains('.') {
             number_literal.to_string()
         } else {
             format!("{}.0", number_literal)
         };
+        loop {
+            let last_char = formatted_literal.pop().unwrap();
+            if last_char != '0' {
+                formatted_literal.push(last_char);
+                if last_char == '.' {
+                    formatted_literal.push('0');
+                }
+                break;
+            }
+        }
         println!("NUMBER {} {}", number_literal, formatted_literal);
     }
 
