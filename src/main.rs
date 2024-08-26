@@ -1,6 +1,5 @@
 use std::env;
 use std::fs;
-use std::io::{self, Write};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -39,7 +38,7 @@ fn main() {
 }
 
 fn tokenize(file_contents: &str) {
-    file_contents.chars().map(|c| {
+    let _ = file_contents.chars().map(|c| {
         match c {
             '(' => {
                 println!("LEFT_PAREN ( null");
@@ -48,8 +47,9 @@ fn tokenize(file_contents: &str) {
                 println!("RIGHT_PAREN ) null");
             }
             _ => {
-                println!("Something Unknown");
+                // println!("Something Unknown");
             }
         };
     }).collect::<()>();
+    println!("EOF null");
 }
