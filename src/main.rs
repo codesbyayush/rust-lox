@@ -92,6 +92,7 @@ fn tokenize(file_contents: &str) {
             '<' =>    last = '<',
             '>' =>    last = '>',
             '/' =>    last = '/',
+            '\n' | '\t' | '\r' =>   continue,
             u => {
                 eprintln!("[line 1] Error: Unexpected character: {}", u);
                 code = 65;
