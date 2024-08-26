@@ -41,10 +41,17 @@ fn main() {
 
 fn tokenize(file_contents: &str) {
     let mut code = 0;
-    let length = file_contents.len();
     let characters = file_contents.chars();
+
     let mut last = ' ';
-    for (i, c) in characters.enumerate() {
+    for (_, c) in characters.enumerate() {
+        if last == '/' && c == '/' {
+            last = ' '; 
+            break;
+        } else if last == '/' {
+            println!("SLASH / null");
+            last = ' ';
+        }
         if c != '=' && last != ' ' {
             let mut found = true;
             match last {
@@ -57,13 +64,7 @@ fn tokenize(file_contents: &str) {
             if !found { last = '=';}
             else { last = ' ';}
         } 
-        if last == '/' && c == last {
-            last = ' '; 
-            break;
-        } else if last == '/' {
-            println!("SLASH / null");
-            last = ' ';
-        }
+        
         match c {
             '(' =>     println!("LEFT_PAREN ( null"),        
             '{' =>    println!("LEFT_BRACE {{ null"),
