@@ -1,5 +1,7 @@
 use std::env;
 use std::fs;
+use std::process::exit;
+use std::process::ExitCode;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -39,6 +41,7 @@ fn main() {
 }
 
 fn tokenize(file_contents: &str) {
+    let mut code = 0;
     let _ = file_contents.chars().for_each(|c| {
         match c {
 
@@ -54,8 +57,10 @@ fn tokenize(file_contents: &str) {
             ';' =>    println!("SEMICOLON ; null"), 
             u => {
                 eprintln!("[line 1] Error: Unexpected character: {}", u);
+                code = 65;
             }
         };
     });
     println!("EOF  null");
+    exit(code);
 }
