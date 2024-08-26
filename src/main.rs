@@ -48,6 +48,9 @@ fn tokenize(file_contents: &str) {
         if last == '=' && c != '=' {
             println!("EQUAL = null");
             last = ' ';
+        } else if last == '!' && c != '=' {
+            println!("BANG ! null");
+            last = ' ';
         }
         match c {
             '(' =>     println!("LEFT_PAREN ( null"),        
@@ -61,13 +64,19 @@ fn tokenize(file_contents: &str) {
             ')' =>    println!("RIGHT_PAREN ) null"),
             ';' =>    println!("SEMICOLON ; null"), 
             '=' =>    {
-                if last == '=' {
-                    println!("EQUAL_EQUAL == null");
-                    last = ' ';
-                } else {
-                    last = '=';
+                match last {
+                    '=' => {
+                        println!("EQUAL_EQUAL == null");
+                        last = ' ';
+                    },
+                    '!' => {
+                        println!("BANG_EQUAL != null");
+                        last = ' ';
+                    },
+                    _ => last = '='
                 }
             },
+            '!' =>    last = '!',
             u => {
                 eprintln!("[line 1] Error: Unexpected character: {}", u);
                 code = 65;
