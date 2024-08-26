@@ -1,4 +1,5 @@
 
+use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::process::exit;
@@ -31,7 +32,29 @@ fn main() {
     }
 }
 
+
 fn tokenize(file_contents: &str) {
+
+    let keywords: HashMap<&str, &str> = HashMap::from([
+    
+        ("and",    "AND"),
+        ("class",  "CLASS"),
+        ("else",   "ELSE"),
+        ("false",  "FALSE"),
+        ("for",    "FOR"),
+        ("fun",    "FUN"),
+        ("if",     "IF"),
+        ("nil",    "NIL"),
+        ("or",     "OR"),
+        ("print",  "PRINT"),
+        ("return", "RETURN"),
+        ("super",  "SUPER"),
+        ("this",   "THIS"),
+        ("true",   "TRUE"),
+        ("var",    "VAR"),
+        ("while",  "WHILE"),
+      
+]);
     let mut exit_code = 0;
     let characters = file_contents.chars();
     let mut curr_line = 1;
@@ -120,7 +143,8 @@ fn tokenize(file_contents: &str) {
             if c.is_ascii_alphanumeric() {
                 continue;
             }
-            println!("IDENTIFIER {} null", &file_contents[literal_start..i]);
+            let identifier_type = keywords.get(&file_contents[literal_start..i]).unwrap_or(&"IDENTIFIER");
+            println!("{} {} null", identifier_type, &file_contents[literal_start..i]);
             ongoing_identifier = false;
         }
 
