@@ -1,7 +1,6 @@
 use std::env;
 use std::fs;
 use std::process::exit;
-use std::process::ExitCode;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -42,9 +41,15 @@ fn main() {
 
 fn tokenize(file_contents: &str) {
     let mut code = 0;
-    let _ = file_contents.chars().for_each(|c| {
+    let length = file_contents.len();
+    let characters = file_contents.chars();
+    let mut last = ' ';
+    for (i, c) in characters.enumerate() {
+        if last == '=' && c != '=' {
+            println!("EQUAL = null");
+            last = ' ';
+        }
         match c {
-
             '(' =>     println!("LEFT_PAREN ( null"),        
             '{' =>    println!("LEFT_BRACE {{ null"),
             '*' =>    println!("STAR * null"),
@@ -55,12 +60,23 @@ fn tokenize(file_contents: &str) {
             '}' =>    println!("RIGHT_BRACE }} null"),
             ')' =>    println!("RIGHT_PAREN ) null"),
             ';' =>    println!("SEMICOLON ; null"), 
+            '=' =>    {
+                if last == '=' {
+                    println!("EQUAL_EQUAL == null");
+                    last = ' ';
+                } else {
+                    last = '=';
+                }
+            },
             u => {
                 eprintln!("[line 1] Error: Unexpected character: {}", u);
                 code = 65;
             }
         };
-    });
+    }
+    if last == '=' {
+        println!("EQUAL = null");
+    }
     println!("EOF  null");
     exit(code);
 }
