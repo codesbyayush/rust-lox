@@ -126,7 +126,7 @@ fn tokenize(file_contents: &str) {
     }
 
     if ongoing_string {
-        println!("[line {}] Error: Unterminated string.", curr_line);
+        eprintln!("[line {}] Error: Unterminated string.", curr_line);
         exit_code = 65;
     }
     println!("EOF  null");
