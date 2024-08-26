@@ -42,7 +42,7 @@ fn main() {
 fn tokenize(file_contents: &str) {
     let mut code = 0;
     let characters = file_contents.chars();
-
+    let mut curr_line = 1;
     let mut last = ' ';
     for (_, c) in characters.enumerate() {
         if last == '/' && c == '/' {
@@ -92,9 +92,10 @@ fn tokenize(file_contents: &str) {
             '<' =>    last = '<',
             '>' =>    last = '>',
             '/' =>    last = '/',
-            '\n' | '\t' | '\r' | ' ' =>   continue,
+            '\n' =>   curr_line += 1,
+            '\t' | '\r' | ' ' =>   continue,
             u => {
-                eprintln!("[line 1] Error: Unexpected character: {}", u);
+                eprintln!("[line {}] Error: Unexpected character: {}", curr_line, u);
                 code = 65;
             }
         };
