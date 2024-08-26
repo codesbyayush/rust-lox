@@ -89,8 +89,12 @@ fn tokenize(file_contents: &str) {
             }
         };
     }
-    if last == '=' {
-        println!("EQUAL = null");
+    match last {
+        '=' => println!("EQUAL = null"),
+        '!' => println!("BANG ! null"),
+        '<' => println!("LESS < null"),
+        '>' => println!("GREATER > null"),
+        _ => {}
     }
     println!("EOF  null");
     exit(code);
