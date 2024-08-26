@@ -39,6 +39,7 @@ fn tokenize(file_contents: &str) {
     let mut is_comment = false;
     let mut ongoing_string = false;
     let mut ongoing_number = false;
+    let mut ongoing_identifier = false;
     let mut literal_start = 0;
     for (i, c) in characters.enumerate() {
         if ongoing_string {
@@ -58,7 +59,7 @@ fn tokenize(file_contents: &str) {
         }
         
 
-        if c.is_ascii_digit() || (c == '.' && ongoing_number) {
+        if (c.is_ascii_digit() && !ongoing_identifier) || (c == '.' && ongoing_number) {
             if !ongoing_number {
                 literal_start = i;
                 ongoing_number = true;
@@ -76,6 +77,25 @@ fn tokenize(file_contents: &str) {
             println!("NUMBER {} {}", number_literal, formatted_literal);
             ongoing_number = false;
         }
+
+
+        if c.is_ascii_alphabetic() || c == '_' {
+            if !ongoing_identifier {
+                literal_start = i;
+                ongoing_identifier = true;
+            }
+            continue;
+        }
+
+        if ongoing_identifier {
+            if c.is_ascii_alphanumeric() {
+                continue;
+            }
+            println!("IDENTIFIER {} null", &file_contents[literal_start..i]);
+            ongoing_identifier = false;
+        }
+
+
         if is_comment {
             if c == '\n' {
                 is_comment = false;
@@ -160,6 +180,10 @@ fn tokenize(file_contents: &str) {
             format!("{}.0", number_literal)
         };
         println!("NUMBER {} {}", number_literal, formatted_literal);
+    }
+
+    if ongoing_identifier {
+        println!("IDENTIFIER {} null", &file_contents[literal_start..]);
     }
     
     println!("EOF  null");
