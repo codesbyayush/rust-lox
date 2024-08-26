@@ -57,9 +57,11 @@ fn tokenize(file_contents: &str) {
             if !found { last = '=';}
             else { last = ' ';}
         } 
-        if last == '/' {
-            if c == '/' { last = ' '; break;}
-            else { println!("SLASH / null");}
+        if last == '/' && c == last {
+            last = ' '; 
+            break;
+        } else if last == '/' {
+            println!("SLASH / null");
             last = ' ';
         }
         match c {
