@@ -1,3 +1,4 @@
+
 use std::env;
 use std::fs;
 use std::process::exit;
@@ -37,13 +38,14 @@ fn tokenize(file_contents: &str) {
     let mut last_word = ' ';
     let mut is_comment = false;
     let mut ongoing_string = false;
-    let mut string_start = 0;
+    let mut ongoing_number = false;
+    let mut literal_start = 0;
     for (i, c) in characters.enumerate() {
         if ongoing_string {
             if c == '\n' {
                 curr_line += 1;
             } else if c == '"' {
-                let string_literal = &file_contents[string_start..(i)];
+                let string_literal = &file_contents[literal_start..(i)];
                 println!("STRING {}\" {}", &string_literal, &string_literal[1..]);
                 ongoing_string = false;
             }
@@ -51,8 +53,28 @@ fn tokenize(file_contents: &str) {
         }
         if c == '"' {
             ongoing_string = true;
-            string_start = i;
+            literal_start = i;
             continue;
+        }
+        
+
+        if c.is_ascii_digit() || (c == '.' && ongoing_number) {
+            if !ongoing_number {
+                literal_start = i;
+                ongoing_number = true;
+            }
+            continue;
+        }
+
+        if ongoing_number {
+            let number_literal = &file_contents[literal_start..i];
+            let formatted_literal = if number_literal.contains('.') {
+                number_literal.to_string()
+            } else {
+                format!("{}.0", number_literal)
+            };
+            println!("NUMBER {} {}", number_literal, formatted_literal);
+            ongoing_number = false;
         }
         if is_comment {
             if c == '\n' {
@@ -129,6 +151,17 @@ fn tokenize(file_contents: &str) {
         eprintln!("[line {}] Error: Unterminated string.", curr_line);
         exit_code = 65;
     }
+
+    if ongoing_number {
+        let number_literal = &file_contents[literal_start..];
+        let formatted_literal = if number_literal.contains('.') {
+            number_literal.to_string()
+        } else {
+            format!("{}.0", number_literal)
+        };
+        println!("NUMBER {} {}", number_literal, formatted_literal);
+    }
+    
     println!("EOF  null");
     exit(exit_code);
 }
