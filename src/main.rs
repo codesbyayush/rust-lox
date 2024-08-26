@@ -44,15 +44,22 @@ fn tokenize(file_contents: &str) {
     let characters = file_contents.chars();
     let mut curr_line = 1;
     let mut last = ' ';
+    let mut comment = false;
     for (_, c) in characters.enumerate() {
-        if c == '#' {
-            println!("# found at {} {} {}", curr_line, file_contents, last);
+        if comment && c == '\n' {
+            comment = false;
+            curr_line += 1;
+            continue;
+        } else if comment {
+            continue;
         }
         if last == '/' && c == '/' {
             last = ' '; 
-            break;
+            comment = true;
+            continue;
         } else if last == '/' {
             println!("SLASH / null");
+            
             last = ' ';
         }
         if c != '=' && last != ' ' {
