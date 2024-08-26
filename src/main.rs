@@ -45,6 +45,9 @@ fn tokenize(file_contents: &str) {
     let mut curr_line = 1;
     let mut last = ' ';
     for (_, c) in characters.enumerate() {
+        if c == '#' {
+            println!("# found at {} {} {}", curr_line, file_contents, last);
+        }
         if last == '/' && c == '/' {
             last = ' '; 
             break;
