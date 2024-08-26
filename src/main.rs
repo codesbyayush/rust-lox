@@ -47,6 +47,8 @@ fn tokenize(file_contents: &str) {
             ')' => {
                 println!("RIGHT_PAREN ) null");
             },
+            '{' => println!("LEFT_BRACE {{ null"),
+            '}' => println!("RIGHT_BRACE }} null"),
             _ => {
                 // println!("Something Unknown");
             }
