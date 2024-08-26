@@ -52,5 +52,5 @@ fn tokenize(file_contents: &str) {
             }
         };
     });
-    println!("EOF null");
+    println!("EOF  null");
 }
