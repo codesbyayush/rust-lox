@@ -48,8 +48,10 @@ fn tokenize(file_contents: &str) {
             '.' =>    println!("DOT . null"),
             ',' =>    println!("COMMA , null"),
             '+' =>    println!("PLUS + null"),
+            '-' =>    println!("MINUS - null"),
             '}' =>    println!("RIGHT_BRACE }} null"),
             ')' =>    println!("RIGHT_PAREN ) null"),
+            ';' =>    println!("SEMICOLON ; null"),
             _ => {
                 // println!("Something Unknown");
             }
