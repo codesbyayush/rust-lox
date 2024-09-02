@@ -9,8 +9,9 @@ pub fn parse(file_contents: &str) {
     loop {
         let token = next_token(&mut characters);
         match token {
-            Ok((token_type, representation, _something)) => match &token_type[..] {
+            Ok((token_type, representation, value)) => match &token_type[..] {
                 "IDENTIFIER" => println!("{}", representation),
+                "NUMBER" => println!("{}", value),
                 _ => println!("{}", token_type),
             },
             Err(some_err) => match &some_err[..] {
