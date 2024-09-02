@@ -42,8 +42,8 @@ fn parse(file_contents: &str) {
     loop {
         let token = next_token(&mut characters);
         match token {
-            Ok((token_type, _representation, _something)) => {
-                println!("{}", token_type);
+            Ok((_token_type, representation, _something)) => {
+                println!("{}", representation);
             }
             Err(some_err) => match &some_err[..] {
                 "NEWLINE" => {
