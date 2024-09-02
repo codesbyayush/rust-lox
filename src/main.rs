@@ -143,7 +143,7 @@ fn next_token(token_vec: &mut Peekable<Chars>) -> Result<(String, String, String
             return Ok((
                 "RIGHT_BRACE".to_string(),
                 "}".to_string(),
-                " null".to_string(),
+                "null".to_string(),
             ))
         }
         ')' => {
