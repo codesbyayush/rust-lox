@@ -110,7 +110,7 @@ fn next_token(token_vec: &mut Peekable<Chars>) -> Result<(String, String, String
     }
     let c = c.unwrap();
 
-    if c.is_ascii_digit() || c == &'.' {
+    if c.is_ascii_digit() {
         return handle_numeral(token_vec);
     } else if c.is_ascii_alphabetic() || c == &'_' {
         return handle_identifier(token_vec);
