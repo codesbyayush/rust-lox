@@ -46,23 +46,23 @@ fn parse(file_contents: &str) {
                 println!("{}", representation);
             }
             Err(some_err) => match &some_err[..] {
-                // "NEWLINE" => {
-                //     curr_line += 1;
-                // }
-                // "UNTERMINATED_STRING" => {
-                //     eprintln!("[line {}] Error: Unterminated string.", curr_line);
-                //     exit_code = 65;
-                // }
-                // "EOF" => {
-                //     println!("EOF  null");
-                //     break;
-                // }
-                // e => {
-                //     let u = &e[9..];
-                //     eprintln!("[line {}] Error: Unexpected character: {}", curr_line, u);
-                //     exit_code = 65;
-                //     // println!("Something unexpected happened!!!");
-                // }
+                "NEWLINE" => {
+                    curr_line += 1;
+                }
+                "UNTERMINATED_STRING" => {
+                    // eprintln!("[line {}] Error: Unterminated string.", curr_line);
+                    exit_code = 65;
+                }
+                "EOF" => {
+                    // println!("EOF  null");
+                    break;
+                }
+                e => {
+                    let u = &e[9..];
+                    // eprintln!("[line {}] Error: Unexpected character: {}", curr_line, u);
+                    exit_code = 65;
+                    // println!("Something unexpected happened!!!");
+                }
             },
         }
     }
@@ -80,23 +80,23 @@ fn tokenize(file_contents: &str) {
                 println!("{} {} {}", token_type, representation, something);
             }
             Err(some_err) => match &some_err[..] {
-                // "NEWLINE" => {
-                //     curr_line += 1;
-                // }
-                // "UNTERMINATED_STRING" => {
-                //     eprintln!("[line {}] Error: Unterminated string.", curr_line);
-                //     exit_code = 65;
-                // }
-                // "EOF" => {
-                //     println!("EOF  null");
-                //     break;
-                // }
-                // e => {
-                //     let u = &e[9..];
-                //     eprintln!("[line {}] Error: Unexpected character: {}", curr_line, u);
-                //     exit_code = 65;
-                //     // println!("Something unexpected happened!!!");
-                // }
+                "NEWLINE" => {
+                    curr_line += 1;
+                }
+                "UNTERMINATED_STRING" => {
+                    eprintln!("[line {}] Error: Unterminated string.", curr_line);
+                    exit_code = 65;
+                }
+                "EOF" => {
+                    println!("EOF  null");
+                    break;
+                }
+                e => {
+                    let u = &e[9..];
+                    eprintln!("[line {}] Error: Unexpected character: {}", curr_line, u);
+                    exit_code = 65;
+                    // println!("Something unexpected happened!!!");
+                }
             },
         }
     }
