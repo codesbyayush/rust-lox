@@ -12,7 +12,7 @@ pub fn parse(file_contents: &str) {
             Ok((token_type, representation, value)) => match &token_type[..] {
                 "IDENTIFIER" => println!("{}", representation),
                 "NUMBER" => println!("{}", value),
-                "STRING" => println!("{}", &representation[1..(representation.len() - 1)]),
+                "STRING" => println!("{}", value),
                 _ => println!("{}", representation),
             },
             Err(some_err) => match &some_err[..] {
