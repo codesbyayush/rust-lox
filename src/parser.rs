@@ -58,7 +58,7 @@ fn handle_parenthesis(characters: &mut Peekable<Chars>) -> Result<String, String
     let mut make_string = String::from("(group");
 
     match handle_grouping(characters) {
-        Ok(val) => make_string.push_str(&format!(" {}", val)),
+        Ok(val) => make_string.push_str(&format!("{}", val)),
         Err(val) => match &val[..] {
             "NON_TERMINATED" => {
                 return Err("NOT_POSSIBLE".to_owned());
