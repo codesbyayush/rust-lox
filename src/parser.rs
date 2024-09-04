@@ -43,12 +43,9 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
 
 fn handle_unary(characters: &mut Peekable<Chars>) -> Result<String, String> {
     let mut make_string = String::from("(!");
-    match handle_grouping(characters) {
-        Ok(val) => make_string.push_str(&format!(" {}", val)),
+    match parsed_value(next_token(characters)) {
+        Ok(val) => make_string.push_str(&format!(" {})", val)),
         Err(val) => match &val[..] {
-            "NON_TERMINATED" => {
-                return Err("NOT_POSSIBLE".to_owned());
-            }
             _ => return Err("SOME_ERROR_OCCURED".to_string()),
         },
     }
