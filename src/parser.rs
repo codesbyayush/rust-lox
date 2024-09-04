@@ -1,40 +1,76 @@
-use std::process::exit;
+use std::{iter::Peekable, process::exit, str::Chars};
 
 use crate::token::next_token;
 
 pub fn parse(file_contents: &str) {
     let mut exit_code = 0;
     let mut characters = file_contents.chars().peekable();
-    // let mut curr_line = 1;
-    loop {
-        let token = next_token(&mut characters);
-        match token {
-            Ok((token_type, representation, value)) => match &token_type[..] {
-                "IDENTIFIER" => println!("{}", representation),
-                "NUMBER" => println!("{}", value),
-                "STRING" => println!("{}", value),
-                _ => println!("{}", representation),
-            },
-            Err(some_err) => match &some_err[..] {
-                "NEWLINE" => {
-                    // curr_line += 1;
-                }
-                "UNTERMINATED_STRING" => {
-                    // eprintln!("[line {}] Error: Unterminated string.", curr_line);
-                    exit_code = 65;
-                }
-                "EOF" => {
-                    // println!("EOF  null");
-                    break;
-                }
-                e => {
-                    let _u = &e[9..];
-                    // eprintln!("[line {}] Error: Unexpected character: {}", curr_line, u);
-                    exit_code = 65;
-                    // println!("Something unexpected happened!!!");
-                }
+    while characters.peek().is_some() {
+        let value = handle_parsing(&mut characters);
+        match value {
+            Ok(val) => println!("{}", val),
+            Err(some_err) => match &some_err {
+                _ => {}
             },
         }
     }
     exit(exit_code);
+}
+
+fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
+    let token = next_token(characters);
+    if token.as_ref().is_err() && token.as_ref().err().unwrap() == "EOF" {
+        return Err(String::from("END"));
+    }
+    let value = parsed_value(token);
+    match value {
+        Ok(val) => return Ok(val),
+        Err(some_err) => match &some_err[..] {
+            "LEFT_PAREN" => {
+                let value = handle_grouping(characters);
+                return value;
+            }
+            "RIGHT_PAREN" => {
+                return Err(String::from("PAREN_END"));
+            }
+            _ => {
+                return Err(String::from("END"));
+            }
+        },
+    }
+}
+
+fn handle_grouping(characters: &mut Peekable<Chars>) -> Result<String, String> {
+    let mut make_string = String::from("(group");
+
+    while characters.peek().is_some() {
+        let value = handle_parsing(characters);
+        match value {
+            Ok(val) => make_string.push_str(&format!(" {}", val.to_owned())),
+            Err(some_err) => match &some_err[..] {
+                "PAREN_END" => {
+                    make_string.push(')');
+                    return Ok(make_string.to_owned());
+                }
+                _ => {}
+            },
+        }
+    }
+    return Err("NON_TERMINATED".to_string());
+}
+
+fn parsed_value(token: Result<(String, String, String), String>) -> Result<String, String> {
+    match token {
+        Ok((token_type, representation, value)) => match &token_type[..] {
+            "LEFT_PAREN" => Err(token_type),
+            "RIGHT_PAREN" => Err(token_type),
+            "IDENTIFIER" => Ok(representation),
+            "NUMBER" => Ok(value),
+            "STRING" => Ok(value),
+            _ => Ok(representation),
+        },
+        Err(some_err) => match &some_err[..] {
+            _ => Err("".to_string()),
+        },
+    }
 }
