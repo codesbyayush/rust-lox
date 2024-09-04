@@ -27,12 +27,13 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
         Ok(val) => return Ok(val),
         Err(some_err) => match &some_err[..] {
             "LEFT_PAREN" => {
-                let value = handle_grouping(characters);
+                let value = handle_parenthesis(characters);
                 return value;
             }
             "RIGHT_PAREN" => {
                 return Err(String::from("PAREN_END"));
             }
+            "BANG" => return handle_unary(characters),
             _ => {
                 return Err(String::from("END"));
             }
@@ -40,8 +41,36 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
     }
 }
 
-fn handle_grouping(characters: &mut Peekable<Chars>) -> Result<String, String> {
+fn handle_unary(characters: &mut Peekable<Chars>) -> Result<String, String> {
+    let mut make_string = String::from("(!");
+    match handle_grouping(characters) {
+        Ok(val) => make_string.push_str(&format!(" {}", val)),
+        Err(val) => match &val[..] {
+            "NON_TERMINATED" => {
+                return Err("NOT_POSSIBLE".to_owned());
+            }
+            _ => return Err("SOME_ERROR_OCCURED".to_string()),
+        },
+    }
+    return Ok(make_string);
+}
+
+fn handle_parenthesis(characters: &mut Peekable<Chars>) -> Result<String, String> {
     let mut make_string = String::from("(group");
+
+    match handle_grouping(characters) {
+        Ok(val) => make_string.push_str(&format!(" {}", val)),
+        Err(val) => match &val[..] {
+            "NON_TERMINATED" => {
+                return Err("NOT_POSSIBLE".to_owned());
+            }
+            _ => return Err("SOME_ERROR_OCCURED".to_string()),
+        },
+    }
+    return Ok(make_string);
+}
+fn handle_grouping(characters: &mut Peekable<Chars>) -> Result<String, String> {
+    let mut make_string = String::new();
 
     while characters.peek().is_some() {
         let value = handle_parsing(characters);
@@ -64,6 +93,8 @@ fn parsed_value(token: Result<(String, String, String), String>) -> Result<Strin
         Ok((token_type, representation, value)) => match &token_type[..] {
             "LEFT_PAREN" => Err(token_type),
             "RIGHT_PAREN" => Err(token_type),
+            "MINUS" => Err(token_type),
+            "BANG" => Err(token_type),
             "IDENTIFIER" => Ok(representation),
             "NUMBER" => Ok(value),
             "STRING" => Ok(value),
