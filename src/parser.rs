@@ -45,7 +45,7 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
 fn handle_unary(characters: &mut Peekable<Chars>, operation: char) -> Result<String, String> {
     let mut make_string = String::from("(");
     make_string.push(operation);
-    match parsed_value(next_token(characters)) {
+    match handle_parsing(characters) {
         Ok(val) => make_string.push_str(&format!(" {})", val)),
         Err(val) => match &val[..] {
             _ => return Err("SOME_ERROR_OCCURED".to_string()),
@@ -68,6 +68,7 @@ fn handle_parenthesis(characters: &mut Peekable<Chars>) -> Result<String, String
     }
     return Ok(make_string);
 }
+
 fn handle_grouping(characters: &mut Peekable<Chars>) -> Result<String, String> {
     let mut make_string = String::new();
 
