@@ -33,7 +33,8 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
             "RIGHT_PAREN" => {
                 return Err(String::from("PAREN_END"));
             }
-            "BANG" => return handle_unary(characters),
+            "BANG" => return handle_unary(characters, '!'),
+            "MINUS" => return handle_unary(characters, '-'),
             _ => {
                 return Err(String::from("END"));
             }
@@ -41,8 +42,9 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
     }
 }
 
-fn handle_unary(characters: &mut Peekable<Chars>) -> Result<String, String> {
-    let mut make_string = String::from("(!");
+fn handle_unary(characters: &mut Peekable<Chars>, operation: char) -> Result<String, String> {
+    let mut make_string = String::from("(");
+    make_string.push(operation);
     match parsed_value(next_token(characters)) {
         Ok(val) => make_string.push_str(&format!(" {})", val)),
         Err(val) => match &val[..] {
