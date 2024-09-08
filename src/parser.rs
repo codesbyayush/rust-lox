@@ -81,9 +81,7 @@ fn handle_arithemetics(characters: &mut Peekable<Chars>, number: &str) -> String
         }
         // println!("{:?}", make_vec);
     }
-    let mut ans = make_vec.into_iter().collect::<Vec<String>>().join(" ");
-    ans.push(')');
-    return ans;
+    make_vec.into_iter().collect::<Vec<String>>().join(" ")
 }
 
 fn handle_parenthesis(characters: &mut Peekable<Chars>) -> Result<String, String> {
