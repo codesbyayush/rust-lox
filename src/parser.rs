@@ -60,16 +60,18 @@ fn handle_arithemetics(characters: &mut Peekable<Chars>, number: &str) -> String
         let token = next_token(characters);
         let value = parsed_value(token);
         match value {
-            Ok(val) => {}
+            Ok(val) => {
+                if &val == "*" {
+                    make_vec.push_front("(*".to_string());
+                } else if &val == "/" {
+                    make_vec.push_front("(/".to_string());
+                } else {
+                    break;
+                }
+            }
             Err(val) => {
                 if !is_string_number(&val) {
-                    if &val == "*" {
-                        make_vec.push_front("(*".to_string());
-                    } else if &val == "/" {
-                        make_vec.push_front("(/".to_string());
-                    } else {
-                        break;
-                    }
+                    break;
                 } else {
                     make_vec.push_back(val.to_owned());
                 }
