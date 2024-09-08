@@ -1,9 +1,9 @@
-use std::{iter::Peekable, process::exit, str::Chars};
+use std::{iter::Peekable, str::Chars};
 
 use crate::token::next_token;
 
 pub fn parse(file_contents: &str) {
-    let mut exit_code = 0;
+    // let mut exit_code = 0;
     let mut characters = file_contents.chars().peekable();
     while characters.peek().is_some() {
         let value = handle_parsing(&mut characters);
@@ -14,7 +14,7 @@ pub fn parse(file_contents: &str) {
             },
         }
     }
-    exit(exit_code);
+    // exit(exit_code);
 }
 
 fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
@@ -30,12 +30,14 @@ fn handle_parsing(characters: &mut Peekable<Chars>) -> Result<String, String> {
                 let value = handle_parenthesis(characters);
                 return value;
             }
-            "RIGHT_PAREN" => {
-                return Err(String::from("PAREN_END"));
-            }
+            "RIGHT_PAREN" => return Err(String::from("PAREN_END")),
             "BANG" => return handle_unary(characters, '!'),
             "MINUS" => return handle_unary(characters, '-'),
-            _ => {
+            "SEMICOLON" => return Err(some_err),
+            u => {
+                if is_string_number(u) {
+                    return Ok(handle_arithemetics(characters, u));
+                }
                 return Err(String::from("END"));
             }
         },
@@ -52,6 +54,26 @@ fn handle_unary(characters: &mut Peekable<Chars>, operation: char) -> Result<Str
         },
     }
     return Ok(make_string);
+}
+
+fn handle_arithemetics(characters: &mut Peekable<Chars>, number: &str) -> String {
+    let mut make_string = String::from(number);
+    while characters.peek().is_some() {
+        let value = handle_parsing(characters);
+        match value {
+            Ok(val) => {
+                if is_string_number(&val) {
+                    make_string.push_str(&([" ", &val, ")"].join("")));
+                } else {
+                    make_string = String::from(["(", &val, " ", &make_string].join(""));
+                }
+            }
+            Err(_val) => {
+                break;
+            }
+        }
+    }
+    return make_string.to_string();
 }
 
 fn handle_parenthesis(characters: &mut Peekable<Chars>) -> Result<String, String> {
@@ -96,12 +118,16 @@ fn parsed_value(token: Result<(String, String, String), String>) -> Result<Strin
             "MINUS" => Err(token_type),
             "BANG" => Err(token_type),
             "IDENTIFIER" => Ok(representation),
-            "NUMBER" => Ok(value),
+            "NUMBER" => Err(value),
             "STRING" => Ok(value),
             _ => Ok(representation),
         },
         Err(some_err) => match &some_err[..] {
-            _ => Err("".to_string()),
+            _ => return Err(some_err),
         },
     }
+}
+
+fn is_string_number(s: &str) -> bool {
+    s.parse::<f64>().is_ok()
 }
