@@ -73,11 +73,13 @@ fn handle_arithemetics(characters: &mut Peekable<Chars>, number: &str) -> String
                 if !is_string_number(&val) {
                     break;
                 } else {
+                    let mut val = String::from(val.to_owned());
+                    val.push(')');
                     make_vec.push_back(val.to_owned());
                 }
             }
         }
-        println!("{:?}", make_vec);
+        // println!("{:?}", make_vec);
     }
     let mut ans = make_vec.into_iter().collect::<Vec<String>>().join(" ");
     ans.push(')');
